@@ -1,13 +1,29 @@
-def find_store():
-    return """
+from gemini_test import ask_gemini
+
+
+def find_store(niche="shopify"):
+
+    prompt = f"""
+You are an ecommerce lead finder.
+
+Niche: {niche}
+
+Generate ONE ecommerce store opportunity.
+
+Return exactly in this format:
+
 Store:
-https://examplestore.com
+https://example.com
 
 Reason:
-Weak branding
+Short reason
 
 Issues:
-- Weak homepage
-- No trust signals
-- Poor product presentation
+- issue 1
+- issue 2
+- issue 3
 """
+
+    result = ask_gemini(prompt)
+
+    return result
