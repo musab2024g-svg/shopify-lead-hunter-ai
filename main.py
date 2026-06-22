@@ -9,20 +9,31 @@ from telegram.ext import (
 
 from settings import TELEGRAM_BOT_TOKEN
 from gemini_test import ask_gemini
+from shopify_finder import find_store
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
-        "🚀 Shopify Lead Hunter AI جاهز للعمل\n\nأرسل أي سؤال وسأستخدم Gemini للرد."
+        "🚀 Shopify Lead Hunter AI\n\n"
+        "Commands:\n"
+        "/find - Find a Shopify lead"
     )
+
+
+async def find(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(
+        "🔍 Searching for stores..."
+    )
+
+    result = find_store()
+
+    await update.message.reply_text(result)
 
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text
 
     try:
-        await update.message.reply_text("🔍 جاري التحليل...")
-
         result = ask_gemini(text)
 
         if len(result) > 4000:
@@ -32,7 +43,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     except Exception as e:
         await update.message.reply_text(
-            f"❌ Error:\n{str(e)}"
+            f"Error: {str(e)}"
         )
 
 
@@ -40,6 +51,7 @@ def main():
     app = Application.builder().token(TELEGRAM_BOT_TOKEN).build()
 
     app.add_handler(CommandHandler("start", start))
+    app.add_handler(CommandHandler("find", find))
 
     app.add_handler(
         MessageHandler(
