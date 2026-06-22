@@ -16,16 +16,24 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         "🚀 Shopify Lead Hunter AI\n\n"
         "Commands:\n"
-        "/find - Find a Shopify lead"
+        "/find <niche> - Find a Shopify lead by niche (e.g., /find fashion)"
     )
 
 
 async def find(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    # تحديد المجال الافتراضي
+    niche = "shopify"
+
+    # التحقق مما إذا كان المستخدم قد كتب كلمات بعد الأمر /find
+    if context.args:
+        niche = " ".join(context.args)
+
     await update.message.reply_text(
-        "🔍 Searching for stores..."
+        f"🔍 Searching in: {niche}..."
     )
 
-    result = find_store()
+    # تمرير الـ niche المتغير إلى دالة البحث
+    result = find_store(niche)
 
     await update.message.reply_text(result)
 
