@@ -4,16 +4,19 @@ from gemini_test import ask_gemini
 def find_store(niche="shopify"):
 
     prompt = f"""
-You are an ecommerce lead finder.
+Find ONE REAL Shopify store in the niche: {niche}
 
-Niche: {niche}
+Rules:
 
-Generate ONE ecommerce store opportunity.
+- Return a REAL store URL
+- Do NOT use example.com
+- Do NOT invent stores
+- Do NOT explain anything outside the format
 
-Return exactly in this format:
+Format:
 
 Store:
-https://example.com
+https://store-url.com
 
 Reason:
 Short reason
@@ -24,6 +27,13 @@ Issues:
 - issue 3
 """
 
-    result = ask_gemini(prompt)
+    try:
+        result = ask_gemini(prompt)
 
-    return result
+        if not result:
+            return "❌ Gemini returned empty response"
+
+        return result
+
+    except Exception as e:
+        return f"❌ Gemini Error:\n{str(e)}"
